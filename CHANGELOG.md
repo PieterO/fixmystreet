@@ -7,6 +7,7 @@
         - Body users can now create reports as an anonymous user. #1796
         - Extra fields can be added to report form site-wide. #1743
         - Body users can filter reports by all states. #1790
+        - Area summary statistics page in admin #1834
         - `LOGIN_REQUIRED` config key to limit site access to logged-in users.
         - `SIGNUPS_DISABLED` config key to prevent new user registrations.
     - Front end improvements:
