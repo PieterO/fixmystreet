@@ -142,6 +142,11 @@ subtest 'Exor file looks okay' => sub {
 "P,0,999999"
 "X,3,3,3,3,0,0,0,3,0,3,0,0,0"
 EOF
+        my $now = DateTime->now->strftime( '%Y-%m-%d %H:%M' );
+        foreach my $problem (@problems) {
+            $problem->discard_changes;
+            is $problem->get_extra_metadata('rdi_processed'), $now, "Problem was logged as sent in RDI";
+        }
     }
 };
 

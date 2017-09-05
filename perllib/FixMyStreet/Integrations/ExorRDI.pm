@@ -198,6 +198,14 @@ sub construct {
         0, 0, 0 # error counts, always zero
     );
 
+    # Mark all these problems are having been included in an RDI
+    my $now = DateTime->now->strftime( '%Y-%m-%d %H:%M' );
+    $problems->reset;
+    while ( my $report = $problems->next ) {
+        $report->set_extra_metadata('rdi_processed' => $now);
+        $report->update;
+    }
+
     # The RDI format is very weird CSV - each line must be wrapped in
     # double quotes.
     return join "", map { "\"$_\"\r\n" } @$body;
