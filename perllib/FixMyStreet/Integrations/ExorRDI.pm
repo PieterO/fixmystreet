@@ -43,13 +43,23 @@ sub construct {
     my $cobrand = FixMyStreet::Cobrand->get_class_for_moniker('oxfordshire')->new;
     my $dtf = $cobrand->problems->result_source->storage->datetime_parser;
 
+    my $missed_cutoff = DateTime->now - DateTime::Duration->new( hours => 24 );
     my %params = (
         -and => [
             state => [ 'action scheduled' ],
             external_id => { '!=' => undef },
-            'admin_log_entries.action' => 'inspected',
-            'admin_log_entries.whenedited' => { '>=', $dtf->format_datetime($self->start_date) },
-            'admin_log_entries.whenedited' => { '<=', $dtf->format_datetime($self->end_date) },
+            -or => [
+                -and => [
+                    'admin_log_entries.action' => 'inspected',
+                    'admin_log_entries.whenedited' => { '>=', $dtf->format_datetime($self->start_date) },
+                    'admin_log_entries.whenedited' => { '<=', $dtf->format_datetime($self->end_date) },
+                ],
+                -and => [
+                    extra => { -not_like => '%rdi_processed%' },
+                    'admin_log_entries.action' => 'inspected',
+                    'admin_log_entries.whenedited' => { '<=', $dtf->format_datetime($missed_cutoff) },
+                ]
+            ]
         ]
     );
 
