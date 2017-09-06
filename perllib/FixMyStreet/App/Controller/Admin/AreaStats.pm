@@ -99,8 +99,8 @@ sub stats : Private {
             }
         );
 
-        my %by_category = map { $_->category => {} } $c->stash->{live_contacts}->all;
-        my %recent_by_category = map { $_->category => 0 } $c->stash->{live_contacts}->all;
+        my %by_category = map { $_->category => {} } $c->stash->{contacts}->all;
+        my %recent_by_category = map { $_->category => 0 } $c->stash->{contacts}->all;
 
         my $state_map = {};
 
