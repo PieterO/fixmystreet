@@ -20,7 +20,13 @@ sub index : Path : Args(0) {
         $c->forward('/admin/fetch_all_bodies');
     } elsif ( $user->from_body ) {
         $c->forward('load_user_body', [ $user->from_body->id ]);
-        $c->res->redirect( $c->uri_for( '/admin/areastats/body', $c->stash->{body}->id ) );
+        if ($user->area_id) {
+            $c->stash->{area_id} = $user->area_id;
+            $c->forward( 'stats' );
+        } else {
+            $c->stash->{area_id} = $c->stash->{body}->id;
+            $c->forward( '/admin/areastats/body_stats' );
+        }
     } else {
         $c->detach( '/page_error_404_not_found' );
     }
