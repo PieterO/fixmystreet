@@ -60,15 +60,15 @@ FixMyStreet::override_config {
     };
 
     subtest 'gets an area' => sub {
-        $mech->get_ok('/admin/areastats/20720', 'Returns OK if area exists');
+        $mech->get_ok('/admin/areastats/2237/20720', 'Returns OK if area exists');
         $mech->content_contains('Area 20720', 'Area name is shown on the page');
 
         $mech->get('/admin/areastats/XXX');
         is $mech->status, 404, 'Getting a non-existent area returns 404';
     };
 
-    subtest 'shows correct stats' => sub {
-        $mech->get_ok('/admin/areastats/20720');
+    subtest 'shows correct stats for ward' => sub {
+        $mech->get_ok('/admin/areastats/2237/20720');
         $mech->content_contains('In the last month 19 issues opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
         $mech->text_contains('Traffic lights3730');
@@ -92,7 +92,7 @@ FixMyStreet::override_config {
         $closed_problems[1]->update({ confirmed => DateTime->now->subtract(days => 9) });
         $closed_problems[2]->update({ confirmed => DateTime->now->subtract(days => 12) });
 
-        $mech->get_ok('/admin/areastats/20720');
+        $mech->get_ok('/admin/areastats/2237/20720');
         $mech->text_contains('average time between issue being opened and set to another status was 5 days');
     };
 
@@ -102,7 +102,7 @@ FixMyStreet::override_config {
         $scheduled_problems[1]->update({ confirmed => DateTime->now->subtract(days => 50) });
         $scheduled_problems[2]->update({ confirmed => DateTime->now->subtract(days => 50) });
 
-        $mech->get_ok('/admin/areastats/20720');
+        $mech->get_ok('/admin/areastats/2237/20720');
 
         $mech->content_contains('In the last month 15 issues opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
@@ -120,7 +120,7 @@ FixMyStreet::override_config {
             $mech->create_comment_for_problem($scheduled_problems[$i], $oxfordshireuser, 'Title', 'text', 0, 'confirmed', 'fixed', { confirmed => \'current_timestamp' });
         }
 
-        $mech->get_ok('/admin/areastats/20720');
+        $mech->get_ok('/admin/areastats/2237/20720');
         $mech->text_contains('average time between issue being opened and set to another status was 4 days');
     };
 };
