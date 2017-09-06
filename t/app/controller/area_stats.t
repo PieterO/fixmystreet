@@ -53,8 +53,6 @@ FixMyStreet::override_config {
     subtest 'body user gets areas listed' => sub {
         $mech->log_in_ok( $oxfordshireuser->email );
         $mech->get_ok('/admin/areastats');
-        is $mech->res->previous->code, 302, "got 302 for redirect";
-        is $mech->uri->path, '/admin/areastats/body/2237';
         $mech->content_contains('Trowbridge');
         $mech->content_contains('Bradford-on-Avon');
     };
@@ -122,6 +120,19 @@ FixMyStreet::override_config {
 
         $mech->get_ok('/admin/areastats/2237/20720');
         $mech->text_contains('average time between issue being opened and set to another status was 4 days');
+    };
+
+    subtest 'area user can only see their area' => sub {
+        $oxfordshireuser->update({area_id => 20720});
+
+        $mech->get('/admin/areastats/2237');
+        is $mech->status, 404, 'area user cannot see parent area';
+
+        $mech->get('/admin/areastats/2237/20721');
+        is $mech->status, 404, 'area user cannot see another area';
+
+        $mech->get_ok('/admin/areastats');
+        $mech->text_contains('Area 20720', 'index page displays their area to area user');
     };
 };
 

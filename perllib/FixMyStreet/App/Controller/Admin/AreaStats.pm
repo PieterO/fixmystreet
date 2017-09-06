@@ -20,16 +20,36 @@ sub index : Path : Args(0) {
         $c->forward('/admin/fetch_all_bodies');
     } elsif ( $user->from_body ) {
         $c->forward('load_user_body', [ $user->from_body->id ]);
+        $c->stash->{body_id} = $user->from_body->id;
         if ($user->area_id) {
             $c->stash->{area_id} = $user->area_id;
-            $c->forward( 'stats' );
+            $c->visit( 'stats', [ $user->from_body->id, $user->area_id ], [] );
         } else {
-            $c->stash->{area_id} = $c->stash->{body}->id;
-            $c->forward( '/admin/areastats/body_stats' );
+            $c->visit( 'list_wards', [ $user->from_body->id ], [] );
         }
     } else {
         $c->detach( '/page_error_404_not_found' );
     }
+}
+
+sub check_user : Private {
+    my ( $self, $c, $body_id, $area_id ) = @_;
+
+    my $user = $c->user;
+
+    if ($user->is_superuser) {
+        return;
+    }
+
+    if ($body_id and $user->from_body->id eq $body_id) {
+        if (not $user->area_id) {
+            return;
+        } elsif ($area_id and $user->area_id eq $area_id) {
+            return;
+        }
+    }
+
+    $c->detach( '/page_error_404_not_found' );
 }
 
 sub body_base : Chained('/') : PathPart('admin/areastats') : CaptureArgs(1) {
@@ -40,17 +60,29 @@ sub body_base : Chained('/') : PathPart('admin/areastats') : CaptureArgs(1) {
 }
 
 sub list_wards : Chained('body_base') : PathPart('') : Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $user = $c->user;
+
+    $c->forward('check_user', [$c->stash->{body_id}]);
 }
 
 sub body_stats : Chained('body_base') : PathPart('stats') : Args(0) {
     my ($self, $c) = @_;
+    my $user = $c->user;
+
+    $c->forward('check_user', [$c->stash->{body_id}]);
     $c->stash->{area_id} = $c->stash->{body}->id;
     $c->forward('stats');
 }
 
 sub ward_stats : Chained('body_base') :PathPart('') : Args(1) {
     my ($self, $c, $area_id) = @_;
-    $c->stash->{area} = $area_id;
+    my $user = $c->user;
+
+    $c->forward('check_user', [$c->stash->{body_id}, $area_id]);
+
+    $c->stash->{area_id} = $area_id;
     $c->forward('stats');
 }
 
