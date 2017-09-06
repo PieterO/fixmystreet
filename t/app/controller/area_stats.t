@@ -12,15 +12,18 @@ my $oxfordshireuser = $mech->create_user_ok('counciluser@example.com', name => '
 
 $mech->create_contact_ok( body_id => $oxfordshire->id, category => 'Potholes', email => 'potholes@example.com' );
 $mech->create_contact_ok( body_id => $oxfordshire->id, category => 'Traffic lights', email => 'lights@example.com' );
+$mech->create_contact_ok( body_id => $oxfordshire->id, category => 'Litter', email => 'litter@example.com' );
 
 my $area_id = '20720';
+my $alt_area_id = '20721';
 
-$mech->create_problems_for_body(2, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,4324,", created => \'current_timestamp', category => 'Potholes' });
-$mech->create_problems_for_body(3, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,4324,", created => \'current_timestamp', category => 'Traffic lights' });
+$mech->create_problems_for_body(2, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,2237,", created => \'current_timestamp', category => 'Potholes' });
+$mech->create_problems_for_body(3, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,2237,", created => \'current_timestamp', category => 'Traffic lights' });
+$mech->create_problems_for_body(1, $oxfordshire->id, 'Title', { areas => ",$alt_area_id,6753,2237,", created => \'current_timestamp', category => 'Litter' });
 
-my @scheduled_problems = $mech->create_problems_for_body(7, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,4324,", created => \'current_timestamp', category => 'Traffic lights' });
-my @fixed_problems = $mech->create_problems_for_body(4, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,4324,", created => \'current_timestamp', category => 'Potholes' });
-my @closed_problems = $mech->create_problems_for_body(3, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,4324,", created => \'current_timestamp', category => 'Traffic lights' });
+my @scheduled_problems = $mech->create_problems_for_body(7, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,2237,", created => \'current_timestamp', category => 'Traffic lights' });
+my @fixed_problems = $mech->create_problems_for_body(4, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,2237,", created => \'current_timestamp', category => 'Potholes' });
+my @closed_problems = $mech->create_problems_for_body(3, $oxfordshire->id, 'Title', { areas => ",$area_id,6753,2237,", created => \'current_timestamp', category => 'Traffic lights' });
 
 foreach my $problem (@scheduled_problems) {
     $problem->update({ state => 'planned' });
@@ -70,6 +73,18 @@ FixMyStreet::override_config {
         $mech->content_contains('In the last month 19 issues opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
         $mech->text_contains('Traffic lights3730');
+        $mech->text_contains('Litter0000');
+
+        $mech->text_contains('Potholes6');
+        $mech->text_contains('Traffic lights13');
+    };
+
+    subtest 'shows correct stats for council' => sub {
+        $mech->get_ok('/admin/areastats/2237/stats');
+        $mech->content_contains('In the last month 20 issues opened, 7 scheduled, 3 closed, 4 fixed');
+        $mech->text_contains('Potholes2004');
+        $mech->text_contains('Traffic lights3730');
+        $mech->text_contains('Litter1000');
 
         $mech->text_contains('Potholes6');
         $mech->text_contains('Traffic lights13');
