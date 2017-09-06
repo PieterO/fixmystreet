@@ -64,7 +64,7 @@ FixMyStreet::override_config {
         $mech->get_ok('/admin/areastats/2237/20720', 'Returns OK if area exists');
         $mech->content_contains('Area 20720', 'Area name is shown on the page');
 
-        $mech->get('/admin/areastats/XXX');
+        $mech->get('/admin/areastats/999');
         is $mech->status, 404, 'Getting a non-existent area returns 404';
     };
 

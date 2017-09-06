@@ -92,7 +92,7 @@ sub dispatch_request {
     sub (GET + /area/*) {
         my ($self, $area) = @_;
         my $response;
-        if ($area eq 'XXX') {
+        if ($area eq '999') {
           $response = { code => 404, error => "No Area matches the given query." };
           return [ 404, [ 'Content-Type' => 'application/json' ], [ $self->json->encode($response) ] ];
         } else {
