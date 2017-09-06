@@ -87,7 +87,6 @@ class="admin-offsite-link">[% problem.latitude %], [% problem.longitude %]</a>
   [% END %]
 </li>
 <li class="sm">[% loc('Last update:') %] [% PROCESS format_time time=problem.lastupdate %]</li>
-[% TRY %][% INCLUDE 'admin/report_edit_extra_info.html' %][% CATCH file %][% END %]
 <li>[% loc('Service:') %] [% problem.service OR '<em>' _ loc('None') _ '</em>' %]</li>
 <li>[% loc('Cobrand:') %] [% problem.cobrand %]
 <br><small>[% loc('Cobrand data:') %] [% cobrand_data OR '<em>' _ loc('None') _ '</em>' %]</small>
