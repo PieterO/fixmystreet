@@ -73,7 +73,7 @@ FixMyStreet::override_config {
 
     subtest 'shows correct stats for ward' => sub {
         $mech->get_ok('/admin/areastats/2237/20720');
-        $mech->content_contains('In the last month 19 issues opened, 7 scheduled, 3 closed, 4 fixed');
+        $mech->content_contains('19 opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
         $mech->text_contains('Traffic lights3730');
         $mech->text_contains('Litter0000');
@@ -84,7 +84,7 @@ FixMyStreet::override_config {
 
     subtest 'shows correct stats for council' => sub {
         $mech->get_ok('/admin/areastats/2237');
-        $mech->content_contains('In the last month 20 issues opened, 7 scheduled, 3 closed, 4 fixed');
+        $mech->content_contains('20 opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
         $mech->text_contains('Traffic lights3730');
         $mech->text_contains('Litter1000');
@@ -120,7 +120,7 @@ FixMyStreet::override_config {
 
         $mech->get_ok('/admin/areastats/2237/20720');
 
-        $mech->content_contains('In the last month 15 issues opened, 7 scheduled, 3 closed, 4 fixed');
+        $mech->content_contains('15 opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
         $mech->text_contains('Traffic lights3730');
 

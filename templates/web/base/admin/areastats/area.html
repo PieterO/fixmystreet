@@ -24,19 +24,18 @@
 </table>
 
 <p>
+[% loc('Issues in the last month:') %]
+</p>
+
+<p>
 [% tprintf(
-        loc('In the last month %d issues opened, %d scheduled, %d closed, %d fixed'),
+        loc('%d opened, %d scheduled, %d closed, %d fixed'),
         open,
         scheduled,
         closed,
         fixed
         );
 %]
-</p>
-
-
-<p>
-[% loc('In the last month issues reported:') %]
 </p>
 
 <table>
