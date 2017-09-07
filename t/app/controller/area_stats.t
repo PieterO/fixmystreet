@@ -83,7 +83,7 @@ FixMyStreet::override_config {
     };
 
     subtest 'shows correct stats for council' => sub {
-        $mech->get_ok('/admin/areastats/2237/stats');
+        $mech->get_ok('/admin/areastats/2237');
         $mech->content_contains('In the last month 20 issues opened, 7 scheduled, 3 closed, 4 fixed');
         $mech->text_contains('Potholes2004');
         $mech->text_contains('Traffic lights3730');

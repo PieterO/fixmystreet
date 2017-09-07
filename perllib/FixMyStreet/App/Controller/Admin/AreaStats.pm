@@ -59,7 +59,7 @@ sub body_base : Chained('/') : PathPart('admin/areastats') : CaptureArgs(1) {
     $c->stash->{areas} = mySociety::MaPit::call('area/children', [ $body_id ] );
 }
 
-sub list_wards : Chained('body_base') : PathPart('') : Args(0) {
+sub list_wards : Chained('body_base') : PathPart('wards') : Args(0) {
     my ( $self, $c ) = @_;
 
     my $user = $c->user;
@@ -67,7 +67,7 @@ sub list_wards : Chained('body_base') : PathPart('') : Args(0) {
     $c->forward('check_user', [$c->stash->{body_id}]);
 }
 
-sub body_stats : Chained('body_base') : PathPart('stats') : Args(0) {
+sub body_stats : Chained('body_base') : PathPart('') : Args(0) {
     my ($self, $c) = @_;
     my $user = $c->user;
 

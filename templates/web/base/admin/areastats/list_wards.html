@@ -3,7 +3,7 @@
 <ul>
     [% FOR area IN areas %]
         <li>
-            <a href="[% c.uri_for('',  area.value.id) %]">[% area.value.name %]</a>
+            <a href="[% c.uri_for('',  body_id, area.value.id) %]">[% area.value.name %]</a>
         </li>
     [% END %]
 </ul>
