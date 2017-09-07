@@ -149,6 +149,9 @@ FixMyStreet::override_config {
         $mech->get('/admin/areastats/2237/20721');
         is $mech->status, 404, 'area user cannot see another area';
 
+        $mech->get('/admin/areastats/2237/wards');
+        is $mech->status, 404, 'area user cannot see ward list';
+
         $mech->get_ok('/admin/areastats');
         $mech->text_contains('Area 20720', 'index page displays their area to area user');
     };
