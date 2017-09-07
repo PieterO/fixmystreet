@@ -53,4 +53,10 @@
 <p>[% loc('In the last month no problems changed state') %]</p>
 [% END %]
 
+[% IF body_id == area_id %]
+<p>
+<a href="[% c.uri_for('', body_id, 'wards') %]">Ward list</a>
+</p>
+[% END %]
+
 [% INCLUDE 'admin/footer.html' %]
